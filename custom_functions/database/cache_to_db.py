@@ -35,13 +35,12 @@ def cache_to_db(service: str = None, pssh: str = None, kid: str = None, key: str
     ''', (service, pssh, kid, key, license_url, headers, cookies, data))
 
     conn.commit()
-    conn.close()
 
-    # Return whether the record was "added" or "updated"
+    # If the record was existing and updated, return True (updated), else return False (added)
     if existing_record:
-        return True
+        return True  # Updated
     else:
-        return False
+        return False  # Added
 
 def search_by_pssh_or_kid(search_filter):
     # Connect to the database

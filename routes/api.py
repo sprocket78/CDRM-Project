@@ -25,7 +25,7 @@ def get_single_key_service(service, kid):
         'content_key': result,
     })
 
-@api_bp.route('/api/cache/<service>/', methods=['GET'])
+@api_bp.route('/api/cache/<service>', methods=['GET'])
 def get_multiple_key_service(service):
     result = get_kid_key_dict(service_name=service)
     pages = math.ceil(len(result) / 10)
@@ -51,7 +51,7 @@ def add_single_key_service(service, kid):
             'updated': True,
         })
 
-@api_bp.route('/api/cache/<service>/', methods=['POST'])
+@api_bp.route('/api/cache/<service>', methods=['POST'])
 def add_multiple_key_service(service):
     body = request.get_json()
     keys_added = 0
@@ -68,7 +68,7 @@ def add_multiple_key_service(service):
         'updated': str(keys_updated),
     })
 
-@api_bp.route('/api/cache/', methods=['POST'])
+@api_bp.route('/api/cache', methods=['POST'])
 def unique_service():
     services = get_unique_services()
     return jsonify({
