@@ -1,10 +1,4 @@
-.idea
-/databases/key_cache.db
-/databases/WVDs/*
-/static/css/tailwind.css
-/package.json
-/package-lock.json
-/tailwind.config.js
-/databases/users.db
 *.pyc
-/databases/devine.db
+*.prd
+*.wvd
+*.db
