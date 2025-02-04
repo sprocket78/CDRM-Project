@@ -32,7 +32,7 @@ function API() {
 
   return (
     <>
-      <div className='w-full min-h-full bg-zinc-900 shadow-lg shadow-black flex flex-col flex-wrap p-10 justify-around'>
+      <div className='min-w-full w-full min-h-full overflow-x-auto bg-zinc-900 shadow-lg shadow-black flex flex-col flex-wrap p-10 justify-around'>
         
         {/* Decryption Request Section */}
         <details open className='p-5 mb-5 border shadow-lg shadow-black overflow-y-auto'>

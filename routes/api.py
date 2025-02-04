@@ -81,22 +81,25 @@ def unique_service():
 def download_database():
     original_database_path = f'{os.getcwd()}/databases/sql/key_cache.db'
 
-    # Make a copy of the original database to ensure it is not modified
+    # Make a copy of the original database (without locking the original)
     modified_database_path = f'{os.getcwd()}/databases/sql/key_cache_modified.db'
-    shutil.copy(original_database_path, modified_database_path)
 
-    # Open the copied database and modify it
-    conn = sqlite3.connect(modified_database_path)
-    cursor = conn.cursor()
+    # Using shutil.copy2 to preserve metadata (timestamps, etc.)
+    shutil.copy2(original_database_path, modified_database_path)
 
-    # Update all rows to remove Headers and Cookies (set them to NULL or empty strings)
-    cursor.execute('''
-    UPDATE licenses
-    SET Headers = NULL,
-        Cookies = NULL
-    ''')
-    conn.commit()
-    conn.close()
+    # Open the copied database for modification using 'with' statement to avoid locks
+    with sqlite3.connect(modified_database_path) as conn:
+        cursor = conn.cursor()
+
+        # Update all rows to remove Headers and Cookies (set them to NULL or empty strings)
+        cursor.execute('''
+        UPDATE licenses
+        SET Headers = NULL,
+            Cookies = NULL
+        ''')
+
+        # No need for explicit commit, it's done automatically with the 'with' block
+        # The connection will automatically be committed and closed when the block ends
 
     # Send the modified database as an attachment
     return send_file(modified_database_path, as_attachment=True, download_name='key_cache.db')

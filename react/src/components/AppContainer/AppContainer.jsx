@@ -4,6 +4,7 @@ import Home from '../Pages/Home'
 import API from '../Pages/API'
 import Cache from '../Pages/Cache'
 import TestPlayer from '../Pages/TestPlayer'
+import MyAccount from '../Pages/MyAccount'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function AppContainer() {
@@ -19,6 +20,7 @@ function AppContainer() {
         <Route path="/api" element={<API />} />
         <Route path="/testplayer" element={<TestPlayer />} />
         <Route path="/cache" element={<Cache />} />
+        <Route path="account" element={<MyAccount/>} />
         </Routes>
         </div>
     </div>
