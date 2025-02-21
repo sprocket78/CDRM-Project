@@ -2,3 +2,5 @@
 *.prd
 *.wvd
 *.db
+.env
+venv/

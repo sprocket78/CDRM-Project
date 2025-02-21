@@ -21,7 +21,7 @@ function Cache() {
 
   // Function to fetch the cached key count
   const fetchKeyCount = () => {
-    fetch('https://cdrm-project.com/api/cache/keycount')
+    fetch('/api/cache/keycount')
       .then((response) => response.json())
       .then((data) => {
         setKeyCount(data.count); // Assuming the API returns an object with a "count" field
@@ -43,7 +43,7 @@ function Cache() {
   // Function to send API call for searching keys
   const sendApiCall = (text) => {
     if (text.length > 0) {
-      fetch('https://cdrm-project.com/api/cache/search', {
+      fetch('/api/cache/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function Cache() {
             <span className='text-white w-1/1 text-center'>
               Cached Keys: {keyCount} {/* Display the count of cached keys */}
             </span>
-          <a href='https://cdrm-project.com/api/cache/download'>
+          <a href='/api/cache/download'>
           <button className=' self-start w-1/1 bg-green-700 rounded-md mt-1 active:transform active:scale-95 cursor-pointer hover:bg-green-600/50 pt-1 pb-1'>
             Download
           </button>
