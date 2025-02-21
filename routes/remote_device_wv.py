@@ -1,5 +1,6 @@
 import os
 from flask import Blueprint, jsonify, request, current_app, Response
+from flask_cors import CORS, cross_origin
 import base64
 from typing import Any, Optional, Union
 from google.protobuf.message import DecodeError
@@ -11,9 +12,11 @@ from pywidevine.exceptions import (InvalidContext, InvalidInitData, InvalidLicen
                                    InvalidSession, SignatureMismatch, TooManySessions)
 from custom_functions.database.cache_to_db import cache_to_db
 
-remotecdm_wv_bp = Blueprint('remotecdm_wv', __name__)
+remotecdm_wv_bp = Blueprint('remotecdm_wv', __name__, static_folder='react/build/static', template_folder='react/build', static_url_path='/static')
+CORS(remotecdm_wv_bp, resources={r"/*": {"origins": "https://cdrm-project.com"}}, supports_credentials=True)
 
 @remotecdm_wv_bp.route('/remotecdm/widevine', methods=['GET', 'HEAD'])
+@cross_origin()
 def remote_cdm_widevine():
     if request.method == 'GET':
         return jsonify({
@@ -26,6 +29,7 @@ def remote_cdm_widevine():
         return response
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/deviceinfo', methods=['GET'])
+@cross_origin()
 def remote_cdm_widevine_deviceinfo():
     if request.method == 'GET':
         device = widevineDevice.load(f'{os.getcwd()}/configs/CDMs/WV/CDRM.wvd')
@@ -40,6 +44,7 @@ def remote_cdm_widevine_deviceinfo():
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/open', methods=['GET'])
+@cross_origin()
 def remote_cdm_widevine_open(device):
     if str(device) == 'CDRM':
         wv_device = widevineDevice.load(f'{os.getcwd()}/configs/CDMs/WV/CDRM.wvd')
@@ -63,6 +68,7 @@ def remote_cdm_widevine_open(device):
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/close/<session_id>', methods=['GET'])
+@cross_origin()
 def remote_cdm_widevine_close(device, session_id):
     if str(device) == 'CDRM':
         session_id = bytes.fromhex(session_id)
@@ -90,6 +96,7 @@ def remote_cdm_widevine_close(device, session_id):
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/set_service_certificate', methods=['POST'])
+@cross_origin()
 def remote_cdm_widevine_set_service_certificate(device):
     if str(device) == 'CDRM':
         body = request.get_json()
@@ -145,6 +152,7 @@ def remote_cdm_widevine_set_service_certificate(device):
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/get_service_certificate', methods=['POST'])
+@cross_origin()
 def remote_cdm_widevine_get_service_certificate(device):
     if str(device) == 'CDRM':
         body = request.get_json()
@@ -190,6 +198,7 @@ def remote_cdm_widevine_get_service_certificate(device):
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/get_license_challenge/<license_type>', methods=['POST'])
+@cross_origin()
 def remote_cdm_widevine_get_license_challenge(device, license_type):
     if str(device) == 'CDRM':
         body = request.get_json()
@@ -255,6 +264,7 @@ def remote_cdm_widevine_get_license_challenge(device, license_type):
 
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/parse_license', methods=['POST'])
+@cross_origin()
 def remote_cdm_widevine_parse_license(device):
     if str(device) == 'CDRM':
         body = request.get_json()
@@ -304,6 +314,7 @@ def remote_cdm_widevine_parse_license(device):
         })
 
 @remotecdm_wv_bp.route('/remotecdm/widevine/<device>/get_keys/<key_type>', methods=['POST'])
+@cross_origin()
 def remote_cdm_widevine_get_keys(device, key_type):
     if str(device) == 'CDRM':
         body = request.get_json()

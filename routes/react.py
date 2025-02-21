@@ -1,7 +1,9 @@
 from flask import Blueprint, send_from_directory
+from flask_cors import CORS, cross_origin
 import os
 
-react_bp = Blueprint('react_bp', __name__, static_folder='react/build/static', template_folder='react/build')
+react_bp = Blueprint('react_bp', __name__, static_folder='react/build/static', template_folder='react/build', static_url_path='/static')
+CORS(react_bp, resources={r"/*": {"origins": "https://cdrm-project.com"}}, supports_credentials=True)
 
 @react_bp.route('/')
 @react_bp.route('/<path:path>')

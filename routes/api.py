@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from flask import Blueprint, jsonify, request, send_file
+from flask_cors import CORS, cross_origin
 import json
 from custom_functions.decrypt.api_decrypt import api_decrypt
 from custom_functions.database.cache_to_db import search_by_pssh_or_kid, cache_to_db, get_key_by_kid_and_service, \
@@ -9,15 +10,18 @@ from custom_functions.database.cache_to_db import key_count
 import shutil
 import math
 
-api_bp = Blueprint('api', __name__)
+api_bp = Blueprint('api', __name__, static_folder='react/build/static', template_folder='react/build', static_url_path='/static')
+CORS(api_bp, resources={r"/*": {"origins": "https://cdrm-project.com"}}, supports_credentials=True)
 
 @api_bp.route('/api/cache/search', methods=['POST'])
+@cross_origin()
 def get_data():
     search_argument = json.loads(request.data)['input']
     results = search_by_pssh_or_kid(search_filter=search_argument)
     return jsonify(results)
 
 @api_bp.route('/api/cache/<service>/<kid>', methods=['GET'])
+@cross_origin()
 def get_single_key_service(service, kid):
     result = get_key_by_kid_and_service(kid=kid, service=service)
     return jsonify({
@@ -26,6 +30,7 @@ def get_single_key_service(service, kid):
     })
 
 @api_bp.route('/api/cache/<service>', methods=['GET'])
+@cross_origin()
 def get_multiple_key_service(service):
     result = get_kid_key_dict(service_name=service)
     pages = math.ceil(len(result) / 10)
@@ -36,6 +41,7 @@ def get_multiple_key_service(service):
     })
 
 @api_bp.route('/api/cache/<service>/<kid>', methods=['POST'])
+@cross_origin()
 def add_single_key_service(service, kid):
     body = request.get_json()
     content_key = body['content_key']
@@ -52,6 +58,7 @@ def add_single_key_service(service, kid):
         })
 
 @api_bp.route('/api/cache/<service>', methods=['POST'])
+@cross_origin()
 def add_multiple_key_service(service):
     body = request.get_json()
     keys_added = 0
@@ -69,6 +76,7 @@ def add_multiple_key_service(service):
     })
 
 @api_bp.route('/api/cache', methods=['POST'])
+@cross_origin()
 def unique_service():
     services = get_unique_services()
     return jsonify({
@@ -78,6 +86,7 @@ def unique_service():
 
 
 @api_bp.route('/api/cache/download', methods=['GET'])
+@cross_origin()
 def download_database():
     original_database_path = f'{os.getcwd()}/databases/sql/key_cache.db'
 
@@ -105,6 +114,7 @@ def download_database():
     return send_file(modified_database_path, as_attachment=True, download_name='key_cache.db')
 
 @api_bp.route('/api/cache/keycount', methods=['GET'])
+@cross_origin()
 def get_count():
     current_count = key_count()
     return jsonify({
@@ -112,6 +122,7 @@ def get_count():
     })
 
 @api_bp.route('/api/decrypt', methods=['POST'])
+@cross_origin()
 def decrypt_data():
     api_request_data = json.loads(request.data)
     if 'pssh' in api_request_data:
