@@ -25,5 +25,16 @@
  - Install python dependencies `pip install -r requirements.txt`
  - (Optional) Place your .WVD file into `/configs/CDMs/WV`
  - (Optional) Place your .PRD file into `/configs/CDMs/PR`
- - Run the application `python main.py`
+ - Please set your `ENVIRONMENT` in `.env.example`, then rename it to `.env`.
+ - Example:
+  ```
+    [DEFAULT]
+    FLASK_DEBUG = True
+    FLASK_ENV = Development
+    FLASK_APP = main.py
+    FLASK_RUN_HOST = 0.0.0.0
+    FLASK_RUN_PORT = 1337
+    SECRET_KEY = 'CDRM-PROJECT'
+  ```
+ - Run the application `flask run`
 
